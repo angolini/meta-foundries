@@ -6,7 +6,7 @@
 # pushing. Runs on the host; git is the only dependency. Rules and messages
 # track qualcomm/commit-msg-check-action (the QC Preflight commit-msg job).
 #
-# Usage: ci/commit-msg-check.sh [<range>]   # default: main..HEAD
+# Usage: ci/scripts/commit-msg-check.sh [<range>]   # default: main..HEAD
 
 set -u
 
