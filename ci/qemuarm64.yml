@@ -1,6 +1,6 @@
 header:
   version: 14
   includes:
-    - ci/base.yml
+    - ci/include/base.yml
 
 machine: qemuarm64

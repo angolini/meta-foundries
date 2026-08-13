@@ -29,7 +29,7 @@ actions taken. Do not merely restate what the diff changes line by line.
 fewer, and leave a blank line between the subject and the body.** CI enforces
 this in the Commit Message Check (part of QC Preflight Checks), which fails the
 whole PR on any over-length line. Check your commits locally before pushing
-with `ci/commit-msg-check.sh` (see the checklist below).
+with `ci/scripts/commit-msg-check.sh` (see the checklist below).
 
 ## Submitting a pull request
 
@@ -80,9 +80,9 @@ with `ci/commit-msg-check.sh` (see the checklist below).
 
 Run the same checks CI runs from the repository root and make sure they pass:
 
-- [ ] `ci/kas-container-shell-helper.sh ci/yocto-patchreview.sh`
-- [ ] `ci/kas-container-shell-helper.sh ci/yocto-check-layer.sh`
-- [ ] `ci/commit-msg-check.sh`
+- [ ] `ci/scripts/kas-container-shell-helper.sh ci/scripts/yocto-patchreview.sh`
+- [ ] `ci/scripts/kas-container-shell-helper.sh ci/scripts/yocto-check-layer.sh`
+- [ ] `ci/scripts/commit-msg-check.sh`
 - [ ] `vale --config=docs/.vale.ini docs/`
 
 See [Running the `ci/` Check Scripts](docs/ci-scripts.md) for what each check

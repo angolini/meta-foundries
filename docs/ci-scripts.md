@@ -8,18 +8,18 @@ all checks from the repository root.
 
 Run through these before opening a pull request:
 
-- [ ] `ci/yocto-check-layer.sh` — runs `yocto-check-layer` against the layer
+- [ ] `ci/scripts/yocto-check-layer.sh` — runs `yocto-check-layer` against the layer
       (structure, signatures, and README compliance).
-- [ ] `ci/yocto-patchreview.sh` — runs OpenEmbedded-Core patchreview over the
+- [ ] `ci/scripts/yocto-patchreview.sh` — runs OpenEmbedded-Core patchreview over the
       layer's patches against the Yocto Project patch guidelines.
-- [ ] `ci/commit-msg-check.sh` — checks each commit message against the CI
+- [ ] `ci/scripts/commit-msg-check.sh` — checks each commit message against the CI
       Commit Message Check rules. A message needs a non-empty subject and
       body, blank-line separators, and 72-character lines. Runs on the host,
       not in `kas-container`.
 - [ ] `vale --config=docs/.vale.ini docs/` — lints the `docs/` prose with Vale
       (runs on the host, not in `kas-container`).
 
-`ci/kas-container-shell-helper.sh` is a helper, not a check: it runs a given
+`ci/scripts/kas-container-shell-helper.sh` is a helper, not a check: it runs a given
 script inside the CI container and passes the repo and work directories to it.
 
 ## Running Each Check
@@ -29,15 +29,15 @@ script inside the CI container and passes the repo and work directories to it.
 Wrap these with the helper so they run in the CI container:
 
 ```sh
-ci/kas-container-shell-helper.sh ci/yocto-check-layer.sh
-ci/kas-container-shell-helper.sh ci/yocto-patchreview.sh
+ci/scripts/kas-container-shell-helper.sh ci/scripts/yocto-check-layer.sh
+ci/scripts/kas-container-shell-helper.sh ci/scripts/yocto-patchreview.sh
 ```
 
 The helper passes the repo and work directories to the script for you.
 
 ### Commit Message Check
 
-`ci/commit-msg-check.sh` mirrors the CI Commit Message Check locally. It runs on
+`ci/scripts/commit-msg-check.sh` mirrors the CI Commit Message Check locally. It runs on
 the host, needing only git and the working tree, not `kas-container`. It checks
 every non-merge commit against the same rules. A commit needs a non-empty
 subject and body, blank lines separating the subject, body, and trailers, and
@@ -47,9 +47,9 @@ By default it checks the commits on the current branch that are not yet on
 `main`. Pass a revision range to override:
 
 ```sh
-ci/commit-msg-check.sh                  # main..HEAD (default)
-ci/commit-msg-check.sh origin/main..HEAD
-ci/commit-msg-check.sh HEAD~3..HEAD
+ci/scripts/commit-msg-check.sh                  # main..HEAD (default)
+ci/scripts/commit-msg-check.sh origin/main..HEAD
+ci/scripts/commit-msg-check.sh HEAD~3..HEAD
 ```
 
 It exits non-zero and lists the offending commit and line when a message

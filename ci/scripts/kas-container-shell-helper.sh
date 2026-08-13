@@ -2,7 +2,7 @@
 # Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: MIT
 
-TOPDIR=$(realpath $(dirname $(readlink -f $0))/..)
+TOPDIR=$(realpath $(dirname $(readlink -f $0))/../..)
 SCRIPT=$(realpath $1)
 
 if ! [ -f $SCRIPT ]; then
@@ -17,4 +17,4 @@ SCRIPT=${SCRIPT#$TOPDIR/}
 # on ci the kas-container is not on the default path
 KAS_CONTAINER=${KAS_CONTAINER:-$(which kas-container)}
 
-exec $KAS_CONTAINER shell $TOPDIR/ci/base.yml --command "/repo/$SCRIPT /repo /work"
+exec $KAS_CONTAINER shell $TOPDIR/ci/include/base.yml --command "/repo/$SCRIPT /repo /work"

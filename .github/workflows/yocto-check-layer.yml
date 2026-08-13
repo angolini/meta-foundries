@@ -28,4 +28,4 @@ jobs:
 
       - name: Run yocto-check-layer
         run: |
-          ci/kas-container-shell-helper.sh ci/yocto-check-layer.sh
+          ci/scripts/kas-container-shell-helper.sh ci/scripts/yocto-check-layer.sh
