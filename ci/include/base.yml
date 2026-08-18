@@ -43,6 +43,7 @@ local_conf_header:
 
   packagegroup-fio-ota: |
     IMAGE_INSTALL:append = " packagegroup-fio-ota"
+    IMAGE_INSTALL:remove = "aktualizr aktualizr-info aktualizr-shared-prov"
 
   fio-device-register: |
     LMP_FACTORY ?= "default"
