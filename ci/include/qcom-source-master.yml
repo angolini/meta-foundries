@@ -1,0 +1,44 @@
+header:
+  version: 14
+
+repos:
+  meta-openembedded:
+    layers:
+      meta-multimedia:
+      meta-gnome:
+      meta-xfce:
+
+  meta-qcom:
+    url: https://github.com/qualcomm-linux/meta-qcom
+    branch: master
+    layers:
+      .:
+
+  meta-qcom-distro:
+    url: https://github.com/qualcomm-linux/meta-qcom-distro
+    branch: main
+    layers:
+      .:
+
+  meta-virtualization:
+    url: https://git.yoctoproject.org/meta-virtualization
+    branch: master
+    layers:
+      .:
+
+  meta-selinux:
+    url: https://git.yoctoproject.org/meta-selinux
+    branch: master
+    layers:
+      .:
+
+  meta-security:
+    url: https://git.yoctoproject.org/meta-security
+    branch: master
+    layers:
+      .:
+      meta-tpm:
+
+local_conf_header:
+  virtualization: |
+    SKIP_META_VIRT_SANITY_CHECK = "1"
