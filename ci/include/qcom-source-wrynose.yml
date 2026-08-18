@@ -1,0 +1,66 @@
+header:
+  version: 14
+
+repos:
+  bitbake:
+    branch: "2.18"
+
+  openembedded-core:
+    branch: wrynose
+
+  meta-openembedded:
+    branch: wrynose
+    layers:
+      meta-multimedia:
+      meta-gnome:
+      meta-xfce:
+
+  meta-updater:
+    branch: wrynose
+
+  meta-qcom:
+    url: https://github.com/qualcomm-linux/meta-qcom
+    branch: wrynose
+    layers:
+      .:
+
+  meta-qcom-3rdparty:
+    url: https://github.com/qualcomm-linux/meta-qcom-3rdparty
+    branch: wrynose
+    layers:
+      .:
+
+  meta-qcom-distro:
+    url: https://github.com/qualcomm-linux/meta-qcom-distro
+    branch: wrynose
+    layers:
+      .:
+
+  meta-lts-mixins:
+    url: https://git.yoctoproject.org/meta-lts-mixins
+    branch: wrynose/linux-firmware
+    layers:
+      .:
+
+  meta-virtualization:
+    url: https://git.yoctoproject.org/meta-virtualization
+    branch: wrynose
+    layers:
+      .:
+
+  meta-selinux:
+    url: https://git.yoctoproject.org/meta-selinux
+    branch: wrynose
+    layers:
+      .:
+
+  meta-security:
+    url: https://git.yoctoproject.org/meta-security
+    branch: wrynose
+    layers:
+      .:
+      meta-tpm:
+
+local_conf_header:
+  virtualization: |
+    SKIP_META_VIRT_SANITY_CHECK = "1"
