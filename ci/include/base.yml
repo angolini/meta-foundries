@@ -1,5 +1,7 @@
 header:
   version: 14
+  includes:
+    - ci/include/distro.yml
 
 target: core-image-full-cmdline
 
@@ -38,7 +40,6 @@ repos:
 local_conf_header:
   base: |
     CONF_VERSION = "2"
-    DISTRO = "nodistro"
     # Add size metadata to OSTree commit objects, allowing update size estimation
     EXTRA_OSTREE_COMMIT += "--generate-sizes"
 
