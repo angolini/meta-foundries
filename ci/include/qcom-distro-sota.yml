@@ -1,0 +1,6 @@
+header:
+  version: 14
+  includes:
+    - ci/include/qcom-source-master.yml
+
+distro: qcom-distro-sota
