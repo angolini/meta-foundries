@@ -1,0 +1,7 @@
+header:
+  version: 14
+  includes:
+    - ci/include/base.yml
+    - ci/include/qcom-distro-sota.yml
+
+machine: uno-q

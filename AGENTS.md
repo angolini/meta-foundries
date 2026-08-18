@@ -17,8 +17,8 @@ This file guides automation agents to run builds / checks the same way CI does:
 meta-foundries is an OpenEmbedded / Yocto Project layer: a collection of recipes
 that make up the Foundries.io update solution. It is a software layer (it depends
 on `core` and ships no machines of its own); the reference build targets the
-`qemuarm64` and `qemuarm64-secureboot` machines provided by OpenEmbedded-Core and
-meta-arm.
+`qemuarm64` and `qemuarm64-secureboot` machines provided by OpenEmbedded-Core
+and meta-arm, plus the Qualcomm `uno-q` machine from meta-qcom-3rdparty.
 
 ## 1) Prerequisites
 

@@ -9,3 +9,10 @@
 /meta-openembedded/
 /meta-arm/
 /meta-updater/
+/meta-qcom/
+/meta-qcom-3rdparty/
+/meta-qcom-distro/
+/meta-lts-mixins/
+/meta-virtualization/
+/meta-selinux/
+/meta-security/
