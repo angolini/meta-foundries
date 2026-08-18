@@ -45,6 +45,7 @@ local_conf_header:
 
   packagegroup-foundries-platform: |
     IMAGE_INSTALL:append = " packagegroup-foundries-platform"
+    IMAGE_INSTALL:remove = "aktualizr aktualizr-info aktualizr-shared-prov"
 
   packagegroup-foundries-containers: |
     IMAGE_INSTALL:append = " packagegroup-foundries-containers"
