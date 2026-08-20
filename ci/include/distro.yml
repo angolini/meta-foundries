@@ -1,4 +1,4 @@
 header:
   version: 14
-
-distro: nodistro
+  includes:
+    - ci/include/qcom-distro-sota.yml
