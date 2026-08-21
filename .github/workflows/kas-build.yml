@@ -25,6 +25,7 @@ jobs:
           - qemuarm64
           - qemuarm64-secureboot
           - qemux86-64
+          - uno-q
     name: kas-setup ${{ matrix.target }}
     steps:
       - uses: actions/checkout@v7
@@ -67,6 +68,7 @@ jobs:
           - qemuarm64
           - qemuarm64-secureboot
           - qemux86-64
+          - uno-q
     name: build ${{ matrix.target }}
     steps:
       - uses: actions/checkout@v7

@@ -1,0 +1,14 @@
+header:
+  version: 14
+  includes:
+    - ci/include/base.yml
+
+machine: uno-q
+
+repos:
+  meta-qcom-3rdparty:
+    url: https://github.com/qualcomm-linux/meta-qcom-3rdparty
+    path: meta-qcom-3rdparty
+    branch: main
+    layers:
+      .:
