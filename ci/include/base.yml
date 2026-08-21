@@ -60,3 +60,10 @@ local_conf_header:
     # containerd builds a Go module cache under its own GOPATH in ${S}, and Go
     # leaves those directories read-only, so do_rm_work cannot unlink them.
     RM_WORK_EXCLUDE += "containerd"
+
+  dev-user: |
+    # Development login only: foundries / fio. The hash is sha512crypt of
+    # the literal password, reproducible with
+    #   openssl passwd -6 -salt FioDev01 fio
+    INHERIT += "extrausers"
+    EXTRA_USERS_PARAMS = "useradd -p '\$6\$FioDev01\$meHdt5WjS8H/83Z4LA1E.cQpF30ztvYoBW8zm9T684PEiLH9Q.nBFWoRn/r.v/Ph/OUdWkVKZBGn9zmu7aySv.' foundries;"
