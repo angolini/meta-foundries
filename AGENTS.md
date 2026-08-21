@@ -74,7 +74,7 @@ Each machine file includes `ci/include/base.yml`, so a single argument is enough
 Example:
 
 ```sh
-export KAS_YAMLS="ci/qemuarm64.yml"
+export KAS_YAMLS="ci/qemuarm64-secureboot.yml"
 "${KAS_CONTAINER:-kas-container}" build "${KAS_YAMLS}"
 ```
 
@@ -104,7 +104,7 @@ ci/scripts/kas-container-shell-helper.sh ci/scripts/yocto-check-layer.sh
 For one-off commands:
 
 ```sh
-kas-container shell --skip repos_checkout ci/qemuarm64.yml -c "bitbake <target>"
+kas-container shell --skip repos_checkout ci/qemuarm64-secureboot.yml -c "bitbake <target>"
 ```
 
 Use the helper scripts for CI parity whenever possible.

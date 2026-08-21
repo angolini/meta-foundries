@@ -22,7 +22,6 @@ jobs:
       fail-fast: false
       matrix:
         target:
-          - qemuarm64
           - qemuarm64-secureboot
           - qemux86-64
           - uno-q
@@ -65,7 +64,6 @@ jobs:
       fail-fast: false
       matrix:
         target:
-          - qemuarm64
           - qemuarm64-secureboot
           - qemux86-64
           - uno-q
