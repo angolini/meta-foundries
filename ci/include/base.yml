@@ -54,3 +54,9 @@ local_conf_header:
     LMP_FACTORY ?= "default"
     LMP_FACTORY_TAG ?= "master"
     OS_RELEASE_FIELDS:append = " LMP_FACTORY LMP_FACTORY_TAG"
+
+  dev-rm-work: |
+    INHERIT += "rm_work"
+    # containerd builds a Go module cache under its own GOPATH in ${S}, and Go
+    # leaves those directories read-only, so do_rm_work cannot unlink them.
+    RM_WORK_EXCLUDE += "containerd"
