@@ -9,3 +9,20 @@ local_conf_header:
     # its basehash, which is stable across build directories, so a run reuses
     # the sstate another run built.
     BB_SIGNATURE_HANDLER = "OEBasicHash"
+
+  parallelism: |
+    # Size the build for the runners' memory rather than their core count.
+    #
+    # With 16 vCPUs bitbake runs 16 tasks at once, each making with -j 16.
+    # That holds while sstate is warm, but a cold cache ends with clang, gcc,
+    # rust and the kernel compiling together, and 256 compiler processes do
+    # not fit in 64 GB: the job dies with exit code 137, and as the same
+    # recipes die every attempt they never reach sstate, so a re-run does not
+    # help.
+    #
+    # Leave the task count alone, as a warm build is mostly setscene and
+    # packaging, and cap the compiling instead. Both variables are excluded
+    # from task signatures, so neither changes what sstate matches.
+    BB_PRESSURE_MAX_MEMORY = "15000"
+    PARALLEL_MAKE = "-j 4"
+    do_compile[number_threads] = "8"
