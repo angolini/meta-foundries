@@ -1,0 +1,6 @@
+header:
+  version: 14
+  includes:
+    - ci/include/base.yml
+
+machine: qemux86-64
