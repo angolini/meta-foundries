@@ -67,3 +67,6 @@ local_conf_header:
     #   openssl passwd -6 -salt FioDev01 fio
     INHERIT += "extrausers"
     EXTRA_USERS_PARAMS = "useradd -p '\$6\$FioDev01\$meHdt5WjS8H/83Z4LA1E.cQpF30ztvYoBW8zm9T684PEiLH9Q.nBFWoRn/r.v/Ph/OUdWkVKZBGn9zmu7aySv.' foundries;"
+
+  dev-rootfs-space: |
+    IMAGE_ROOTFS_EXTRA_SPACE = "307200"
