@@ -97,11 +97,15 @@ jobs:
           mkdir -p "${CACHE_DIR}/downloads" "${CACHE_DIR}/sstate-cache"
           echo "DL_DIR=${CACHE_DIR}/downloads" >> $GITHUB_ENV
           echo "SSTATE_DIR=${CACHE_DIR}/sstate-cache" >> $GITHUB_ENV
+          # ci/include/ci.yml holds the settings that suit a CI runner and
+          # would be wrong for a developer's machine, so it composes here
+          # rather than being included by base.yml.
+          echo "KAS_YAMLS=ci/include/ci.yml:ci/${{ matrix.target }}.yml" >> $GITHUB_ENV
 
       - name: Dump resolved kas build yaml
         run: |
           mkdir -p "$KAS_WORK_DIR"
-          "$KAS_CONTAINER" dump --resolve-env --resolve-local --resolve-refs ci/${{ matrix.target }}.yml > kas-build.yml
+          "$KAS_CONTAINER" dump --resolve-env --resolve-local --resolve-refs "$KAS_YAMLS" > kas-build.yml
 
       - name: Upload resolved kas build yaml
         uses: actions/upload-artifact@v7
@@ -111,7 +115,7 @@ jobs:
 
       - name: kas build ${{ matrix.target }}
         run: |
-          "$KAS_CONTAINER" build ci/${{ matrix.target }}.yml
+          "$KAS_CONTAINER" build "$KAS_YAMLS"
 
       - name: Stage build artifacts for publishing
         run: |

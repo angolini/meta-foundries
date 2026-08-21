@@ -1,0 +1,11 @@
+header:
+  version: 14
+
+local_conf_header:
+  ci: |
+    # The default signature handler keeps a hash equivalence database in
+    # sqlite, and bitbake refuses to place one on an NFS mount, which is what
+    # the runners' shared cache is. Without a database the task signature is
+    # its basehash, which is stable across build directories, so a run reuses
+    # the sstate another run built.
+    BB_SIGNATURE_HANDLER = "OEBasicHash"
