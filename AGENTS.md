@@ -199,6 +199,10 @@ Assisted-by: ExampleAgent:example-model-1.0
 Signed-off-by: Some One <some.one@example.com>
 ```
 
+Fixups within a patch series are not allowed. Correct a change in the commit
+that introduced it, so every commit in the series stands on its own and the
+history stays bisectable.
+
 ## 8) Code comments
 
 Comments explain **intent — the "why"** behind the code. They never narrate what the
