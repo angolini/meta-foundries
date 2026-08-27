@@ -61,6 +61,10 @@ local_conf_header:
     # leaves those directories read-only, so do_rm_work cannot unlink them.
     RM_WORK_EXCLUDE += "containerd"
 
+  dev-empty-password: |
+    OE_FRAGMENTS += "core/yocto/root-login-with-empty-password"
+    EXTRA_IMAGE_FEATURES += "serial-autologin-root"
+
   dev-user: |
     # Development login only: foundries / fio. The hash is sha512crypt of
     # the literal password, reproducible with
