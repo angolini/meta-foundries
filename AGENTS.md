@@ -177,6 +177,28 @@ example:
 Assisted-by: ExampleAgent:example-model-1.0
 ```
 
+Order the trailers with `Signed-off-by` last, following the Yocto Project
+convention. Two reasons.
+
+The sign-off is the human's attestation and it covers the lines above it,
+`Assisted-by` included, so last position has the person signing off on the
+assisted work. Plenty of contributors automate the trailer and nothing here
+can tell who typed it; an agent that appends one is filling in a line the
+human stays answerable for.
+
+CI's Commit Message Check knows six trailer names — `Signed-off-by`,
+`Co-authored-by`, `Co-developed-by`, `Reviewed-by`, `Acked-by`, and
+`Tested-by` — and reads every other line, `Assisted-by` included, as body
+text. An `Assisted-by` directly above the sign-off fails the check with
+"Body and trailers must be separated by a blank line", so keep a blank line
+between them:
+
+```text
+Assisted-by: ExampleAgent:example-model-1.0
+
+Signed-off-by: Some One <some.one@example.com>
+```
+
 ## 8) Code comments
 
 Comments explain **intent — the "why"** behind the code. They never narrate what the
