@@ -50,6 +50,9 @@ local_conf_header:
   packagegroup-foundries-containers: |
     IMAGE_INSTALL:append = " packagegroup-foundries-containers"
 
+  nfs-server: |
+    RDEPENDS:packagegroup-core-full-cmdline-sys-services:remove = "nfs-utils"
+
   fio-device-register: |
     LMP_FACTORY ?= "default"
     LMP_FACTORY_TAG ?= "master"
