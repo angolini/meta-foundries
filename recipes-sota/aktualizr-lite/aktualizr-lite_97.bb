@@ -63,7 +63,7 @@ do_install:append() {
 
     for tool in ${D}${bindir}/*; do
         case $(basename ${tool}) in
-            aktualizr-lite|aklite-offline) ;;
+            aktualizr-lite|aklite-offline|aktualizr-get) ;;
             *) rm -f ${tool} ;;
         esac
     done
@@ -73,6 +73,7 @@ do_install:append() {
 
 PACKAGES =+ "${PN}-lib \
              ${@bb.utils.contains('PACKAGECONFIG', 'aklite-offline', '${PN}-offline', '', d)} \
+             aktualizr-get \
 "
 
 FILES:${PN} = "\
@@ -83,6 +84,7 @@ FILES:${PN} = "\
 "
 FILES:${PN}-lib = "${nonarch_libdir}/libaktualizr_lite.so ${libdir}/libaktualizr.so"
 FILES:${PN}-offline = "${bindir}/aklite-offline"
+FILES:aktualizr-get = "${bindir}/aktualizr-get"
 
 RDEPENDS:${PN} = "lshw"
 RDEPENDS:${PN} += "${@bb.utils.contains('PACKAGECONFIG', 'aklite-offline', '${PN}-offline', '', d)}"
