@@ -1,0 +1,4 @@
+#!/bin/sh
+printf "#ROOT#" > /run/adbd.root
+chown adb:adb /run/adbd.root
+chmod 600 /run/adbd.root
