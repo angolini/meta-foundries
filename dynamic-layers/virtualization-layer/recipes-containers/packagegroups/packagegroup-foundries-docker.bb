@@ -6,4 +6,5 @@ inherit packagegroup
 RDEPENDS:${PN} = "\
     docker \
     docker-compose \
+    docker-credential-helper-fio \
 "
