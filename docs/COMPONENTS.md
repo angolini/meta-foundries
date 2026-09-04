@@ -5,8 +5,10 @@ lands; the layer tree is the source of truth for what actually ships.
 
 | Component | Upstream | Purpose |
 |-----------|----------|---------|
-| [`aktualizr-lite`](../recipes-sota/aktualizr-lite/aktualizr-lite_97.bb) | [`foundriesio/aktualizr-lite`](https://github.com/foundriesio/aktualizr-lite) | Foundries.io™ OTA+ update client |
+| [`aktualizr-lite`](../recipes-sota/aktualizr-lite/aktualizr-lite_97.bb) | [`foundriesio/aktualizr-lite`](https://github.com/foundriesio/aktualizr-lite) | Foundries.io™ OTA+ update client; its `aktualizr` submodule also packages the `aktualizr-get` helper used to fetch Hub registry credentials |
 | [`composectl`](../recipes-containers/composeapp/composectl_97.bb) | [`foundriesio/composeapp`](https://github.com/foundriesio/composeapp) | CLI utility to manage compose apps |
+| [`docker-cli-config`](../recipes-support/docker-cli-config/docker-cli-config.bb) | — | Base system Docker CLI config naming the Hub credential helper for `FIO_HUB_URL` |
+| [`docker-credential-helper-fio`](../recipes-support/docker-credential-helper-fio/docker-credential-helper-fio.bb) | — | Docker credential helper that fetches Hub registry credentials via `aktualizr-get` |
 | [`fio-device-register`](../recipes-sota/fio-device-register/fio-device-register_97.bb) | [`foundriesio/lmp-device-register`](https://github.com/foundriesio/lmp-device-register) | Device registration tool for Foundries.io™ OTA+ |
 | [`fio-diag`](../recipes-support/fio-diag/fio-diag_1.2.bb) | [`foundriesio/lmp-tools`](https://github.com/foundriesio/lmp-tools/tree/master/device-scripts) | Diagnostic script the fioconfig `diag` remote action runs |
 | [`fioconfig`](../recipes-support/fioconfig/fioconfig_97.bb) | [`foundriesio/fioconfig`](https://github.com/foundriesio/fioconfig) | Device configuration daemon and handlers; remote actions behind the `actions` PACKAGECONFIG, VPN support behind `vpn` |
