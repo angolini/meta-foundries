@@ -6,9 +6,9 @@ header:
 machine: uno-q
 
 repos:
-  meta-qcom-3rdparty:
-    url: https://github.com/qualcomm-linux/meta-qcom-3rdparty
-    path: meta-qcom-3rdparty
+  meta-qcom-arduino:
+    url: https://github.com/qualcomm-linux/meta-qcom-arduino
+    path: meta-qcom-arduino
     branch: main
     layers:
       .:
