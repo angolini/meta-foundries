@@ -1,0 +1,13 @@
+header:
+  version: 14
+
+distro: nodistro
+
+local_conf_header:
+  nodistro-sota: |
+    require conf/distro/sota.conf.inc
+    INITRAMFS_IMAGE = "initramfs-ostree-image"
+
+  nodistro-baseline: |
+    INIT_MANAGER = "systemd"
+    DISTRO_FEATURES:append = " virtualization"
