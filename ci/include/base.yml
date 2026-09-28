@@ -25,6 +25,9 @@ local_conf_header:
   packagegroup-foundries-network: |
     IMAGE_INSTALL:append = " packagegroup-foundries-network"
     IMAGE_INSTALL:remove = "network-configuration"
+    # NetworkManager owns the links, so systemd-networkd manages none and its
+    # wait-online holds network-online.target for the full 120s timeout.
+    BAD_RECOMMENDATIONS += "systemd-networkd"
 
   nfs-server: |
     RDEPENDS:packagegroup-core-full-cmdline-sys-services:remove = "nfs-utils"
