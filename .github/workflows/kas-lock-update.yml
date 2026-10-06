@@ -42,22 +42,13 @@ jobs:
           grep -q "KAS_CONTAINER_SCRIPT_VERSION=\"${LATEST}\"" "$KAS_CONTAINER" ||
             echo "::notice::kas ${LATEST} is released; move KAS_CONTAINER_IMAGE to its digest."
 
-      - name: File an issue when kas has a newer release
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Look for a newer kas release
+        id: kas
         run: |
-          # A workflow cannot move the pin itself: GITHUB_TOKEN may not push
-          # changes under .github/workflows.
           latest=$(git ls-remote --tags --refs --sort="v:refname" https://github.com/siemens/kas | tail -n1 | sed 's/.*\///')
           pinned=$(sed -n 's/^KAS_CONTAINER_SCRIPT_VERSION="\(.*\)"/\1/p' "$KAS_CONTAINER")
           if [ "$latest" = "$pinned" ]; then
             echo "kas $pinned is the newest release."
-            exit 0
-          fi
-          title="ci: move KAS_CONTAINER_IMAGE to kas $latest"
-          if gh issue list --state all --search "in:title \"$title\"" \
-               --json title --jq '.[].title' | grep -qxF "$title"; then
-            echo "Issue for kas $latest already filed."
             exit 0
           fi
           digest=$(python3 - "$latest" <<'PY'
@@ -73,15 +64,46 @@ jobs:
           print(urllib.request.urlopen(req).headers["Docker-Content-Digest"])
           PY
           )
-          gh issue create --title "$title" --assignee angolini --body "The workflows pin kas $pinned. kas $latest is out.
+          {
+            echo "latest=$latest"
+            echo "pinned=$pinned"
+            echo "digest=$digest"
+          } >> "$GITHUB_OUTPUT"
 
-          \`\`\`
-          KAS_CONTAINER_IMAGE: ghcr.io/siemens/kas/kas@$digest
-          \`\`\`
+      # A workflow cannot move the pin itself: GITHUB_TOKEN may not push
+      # changes under .github/workflows.
+      - name: File an issue when kas has a newer release
+        if: steps.kas.outputs.latest != ''
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          LATEST: ${{ steps.kas.outputs.latest }}
+          PINNED: ${{ steps.kas.outputs.pinned }}
+          DIGEST: ${{ steps.kas.outputs.digest }}
+        with:
+          script: |
+            const { LATEST, PINNED, DIGEST } = process.env;
+            const title = `ci: move KAS_CONTAINER_IMAGE to kas ${LATEST}`;
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              ...context.repo, state: 'all', per_page: 100,
+            });
+            if (issues.some((i) => !i.pull_request && i.title === title)) {
+              core.info(`Issue for kas ${LATEST} already filed.`);
+              return;
+            }
+            await github.rest.issues.create({
+              ...context.repo,
+              title,
+              assignees: ['angolini'],
+              body: `The workflows pin kas ${PINNED}. kas ${LATEST} is out.
 
-          It is set in .github/workflows/kas-build.yml, yocto-check-layer.yml
-          and kas-lock-update.yml. A workflow cannot change it, because
-          GITHUB_TOKEN may not push under .github/workflows."
+            \`\`\`
+            KAS_CONTAINER_IMAGE: ghcr.io/siemens/kas/kas@${DIGEST}
+            \`\`\`
+
+            It is set in .github/workflows/kas-build.yml, yocto-check-layer.yml
+            and kas-lock-update.yml. A workflow cannot change it, because
+            GITHUB_TOKEN may not push under .github/workflows.`,
+            });
 
       - name: Resolve every target against upstream master
         id: relock
