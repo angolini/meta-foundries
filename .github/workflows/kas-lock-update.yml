@@ -302,25 +302,33 @@ jobs:
     permissions:
       issues: write
     steps:
+      # The runners carry no gh CLI; github-script talks to the API directly.
       - name: Open or update the tracking issue
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
           TITLE: 'Upstream master broke the weekly kas lock update'
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: |
-          body="The weekly run against upstream master failed, so the pins in
-          the tree stay where they are and pull requests are unaffected.
+        with:
+          script: |
+            const { TITLE, RUN_URL } = process.env;
+            const body = `The weekly run against upstream master failed, so the pins in
+            the tree stay where they are and pull requests are unaffected.
 
-          Failing run: ${RUN_URL}
+            Failing run: ${RUN_URL}
 
-          The candidate lockfiles are attached to that run as the
-          \`kas-locks-candidate\` artifact, which names the revisions that
-          broke."
-          number="$(gh issue list --state open --search "in:title ${TITLE}" \
-                      --json number --jq '.[0].number // empty')"
-          if [ -n "$number" ]; then
-            gh issue comment "$number" --body "$body"
-          else
-            gh issue create --title "$TITLE" --assignee angolini --body "$body"
-          fi
+            The candidate lockfiles are attached to that run as the
+            \`kas-locks-candidate\` artifact, which names the revisions that
+            broke.`;
+            const open = await github.paginate(github.rest.issues.listForRepo, {
+              ...context.repo, state: 'open', per_page: 100,
+            });
+            const issue = open.find((i) => !i.pull_request && i.title === TITLE);
+            if (issue) {
+              await github.rest.issues.createComment({
+                ...context.repo, issue_number: issue.number, body,
+              });
+            } else {
+              await github.rest.issues.create({
+                ...context.repo, title: TITLE, body, assignees: ['angolini'],
+              });
+            }
