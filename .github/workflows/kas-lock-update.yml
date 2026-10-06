@@ -1,10 +1,16 @@
 name: kas lock update
 
 on:
-  schedule:
-    # Saturday, clear of the meta-qcom weekly build at 00:22 UTC.
-    - cron: '0 6 * * 6'
   workflow_dispatch:
+    inputs:
+      outcome:
+        description: Simulated result of the builds
+        type: choice
+        options: [fail, pass]
+        default: fail
+      fake_kas:
+        description: kas tag to treat as the newest release (empty = real)
+        default: '5.4'
 
 permissions: {}
 
@@ -16,9 +22,7 @@ env:
 
 jobs:
   relock:
-    runs-on:
-      group: GHA-prd-foundriesio-SelfHosted-RG
-      labels: [ self-hosted, qcom-u2404, amd64 ]
+    runs-on: ubuntu-latest
     name: relock against master
     permissions:
       contents: read
@@ -44,8 +48,11 @@ jobs:
 
       - name: Look for a newer kas release
         id: kas
+        env:
+          FAKE_KAS: ${{ inputs.fake_kas }}
         run: |
-          latest=$(git ls-remote --tags --refs --sort="v:refname" https://github.com/siemens/kas | tail -n1 | sed 's/.*\///')
+          latest=${FAKE_KAS:-}
+          [ -n "$latest" ] || latest=$(git ls-remote --tags --refs --sort="v:refname" https://github.com/siemens/kas | tail -n1 | sed 's/.*\///')
           pinned=$(sed -n 's/^KAS_CONTAINER_SCRIPT_VERSION="\(.*\)"/\1/p' "$KAS_CONTAINER")
           if [ "$latest" = "$pinned" ]; then
             echo "kas $pinned is the newest release."
@@ -109,9 +116,7 @@ jobs:
         id: relock
         run: |
           # --update ignores the lockfiles, so every repo lands on its tip.
-          for target in qemuarm64-secureboot qemux86-64 uno-q; do
-            "$KAS_CONTAINER" lock --update ci/$target.yml
-          done
+          echo "# lock update test run $GITHUB_RUN_ID" >> ci/include/base.lock.yml
           if git diff --quiet -- 'ci/*.lock.yml' 'ci/include/*.lock.yml'; then
             echo "changed=false" >> $GITHUB_OUTPUT
             echo 'Upstream master matches the committed pins.' >> $GITHUB_STEP_SUMMARY
@@ -142,9 +147,7 @@ jobs:
   build:
     needs: relock
     if: needs.relock.outputs.changed == 'true'
-    runs-on:
-      group: GHA-prd-foundriesio-SelfHosted-RG
-      labels: [ self-hosted, qcom-u2404, amd64 ]
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -156,101 +159,26 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          persist-credentials: false
-
-      # The download must not leave the committed pins in place.
-      - name: Drop the committed lockfiles
-        run: rm -f ci/*.lock.yml ci/include/*.lock.yml
-
-      - name: Download the candidate lockfiles
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
-        with:
-          name: kas-locks-candidate
-          path: ci
-
-      - name: Download kas-container
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
-        with:
-          name: kas-container-lock-update
-          path: ${{ runner.temp }}
-
-      - name: Set up kas-container
-        run: |
-          KAS_CONTAINER=$RUNNER_TEMP/kas-container
-          echo "KAS_CONTAINER=$KAS_CONTAINER" >> $GITHUB_ENV
-          chmod +x "$KAS_CONTAINER"
-
-      - name: Set up build variables
-        run: |
-          echo "KAS_WORK_DIR=${{ runner.temp }}/kas-work-${{ matrix.target }}" >> $GITHUB_ENV
-          mkdir -p "${CACHE_DIR}/downloads" "${CACHE_DIR}/sstate-cache"
-          echo "DL_DIR=${CACHE_DIR}/downloads" >> $GITHUB_ENV
-          echo "SSTATE_DIR=${CACHE_DIR}/sstate-cache" >> $GITHUB_ENV
-          echo "KAS_YAMLS=ci/include/ci.yml:ci/${{ matrix.target }}.yml" >> $GITHUB_ENV
-
-      - name: Dump resolved kas build yaml
-        run: |
-          mkdir -p "$KAS_WORK_DIR"
-          "$KAS_CONTAINER" dump --resolve-env --resolve-local --resolve-refs "$KAS_YAMLS" > kas-build.yml
-
-      - name: Upload resolved kas build yaml
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
-        with:
-          name: kas-build-lock-update-${{ matrix.target }}
-          path: kas-build.yml
-
-      - name: kas build ${{ matrix.target }}
-        run: |
-          "$KAS_CONTAINER" build "$KAS_YAMLS"
+      - name: Simulated build
+        env:
+          OUTCOME: ${{ inputs.outcome }}
+        run: '[ "$OUTCOME" = pass ]'
 
   check-layer:
     needs: relock
     if: needs.relock.outputs.changed == 'true'
-    runs-on:
-      group: GHA-prd-foundriesio-SelfHosted-RG
-      labels: [ self-hosted, qcom-u2404, amd64 ]
+    runs-on: ubuntu-latest
     name: yocto-check-layer
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          persist-credentials: false
-
-      # The download must not leave the committed pins in place.
-      - name: Drop the committed lockfiles
-        run: rm -f ci/*.lock.yml ci/include/*.lock.yml
-
-      - name: Download the candidate lockfiles
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
-        with:
-          name: kas-locks-candidate
-          path: ci
-
-      - name: Download kas-container
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
-        with:
-          name: kas-container-lock-update
-          path: ${{ runner.temp }}
-
-      - name: Set up kas-container
-        run: |
-          KAS_CONTAINER=$RUNNER_TEMP/kas-container
-          echo "KAS_CONTAINER=$KAS_CONTAINER" >> $GITHUB_ENV
-          chmod +x "$KAS_CONTAINER"
-
-      - name: Run yocto-check-layer
-        run: |
-          ci/scripts/kas-container-shell-helper.sh ci/scripts/yocto-check-layer.sh
+      - name: Simulated yocto-check-layer
+        run: 'true'
 
   propose:
     needs: [relock, build, check-layer]
     if: needs.relock.outputs.changed == 'true'
-    runs-on:
-      group: GHA-prd-foundriesio-SelfHosted-RG
-      labels: [ self-hosted, qcom-u2404, amd64 ]
+    runs-on: ubuntu-latest
     name: propose the lock update
     permissions:
       contents: write
@@ -335,9 +263,7 @@ jobs:
   report-failure:
     needs: [relock, build, check-layer]
     if: failure()
-    runs-on:
-      group: GHA-prd-foundriesio-SelfHosted-RG
-      labels: [ self-hosted, qcom-u2404, amd64 ]
+    runs-on: ubuntu-latest
     name: report the breakage
     permissions:
       issues: write
