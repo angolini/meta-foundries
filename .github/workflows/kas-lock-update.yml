@@ -249,11 +249,9 @@ jobs:
           name: kas-locks-candidate
           path: ci
 
-      - name: Open the lock update pull request
-        id: pr
+      - name: Push the lock update branch
+        id: push
         continue-on-error: true
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           branch="ci-lock-update-$(date -u +%Y-%m-%d)"
           git config user.name 'github-actions[bot]'
@@ -273,14 +271,34 @@ jobs:
           Signed-off-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           EOF
           git push origin "$branch"
-          gh pr create --base main --head "$branch" --assignee angolini \
-            --title 'ci: update the kas lockfiles to upstream master' \
-            --body "Weekly lock update. Every kas target was resolved against upstream master, then built: the three machines and \`yocto-check-layer\` all passed at these revisions.
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
 
-          Produced by [run ${GITHUB_RUN_ID}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})."
+      - name: Open the lock update pull request
+        id: pr
+        if: steps.push.outcome == 'success'
+        continue-on-error: true
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          BRANCH: ${{ steps.push.outputs.branch }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        with:
+          script: |
+            const { BRANCH, RUN_URL } = process.env;
+            const { data: pr } = await github.rest.pulls.create({
+              ...context.repo,
+              base: 'main',
+              head: BRANCH,
+              title: 'ci: update the kas lockfiles to upstream master',
+              body: `Weekly lock update. Every kas target was resolved against upstream master, then built: the three machines and \`yocto-check-layer\` all passed at these revisions.
+
+            Produced by [run ${context.runId}](${RUN_URL}).`,
+            });
+            await github.rest.issues.addAssignees({
+              ...context.repo, issue_number: pr.number, assignees: ['angolini'],
+            });
 
       - name: Report a pull request that could not be opened
-        if: steps.pr.outcome == 'failure'
+        if: steps.push.outcome == 'failure' || steps.pr.outcome == 'failure'
         run: |
           {
             echo '## The lock update has no pull request'
