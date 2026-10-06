@@ -12,3 +12,4 @@ overrides:
       commit: 9f1d5c17b1a39081b6070e07c5514e3db051b5fd
     meta-virtualization:
       commit: 798586ded03a24c1ba421e7d3804bec7326cd228
+# lock update test run 37531848789
