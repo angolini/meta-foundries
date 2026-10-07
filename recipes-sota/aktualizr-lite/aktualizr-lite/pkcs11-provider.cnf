@@ -1,0 +1,11 @@
+# Read when a library context loads the pkcs11 provider by name, as curl
+# does for "PROV" pkcs11: TLS client cert/key paths. Activates nothing.
+#
+# no-deinit: curl frees its per-handle library context on cleanup, and
+# the C_Finalize() that follows would end the libp11 sessions
+# aktualizr-lite holds on the same PKCS#11 module.
+[provider_sect]
+pkcs11 = pkcs11_sect
+
+[pkcs11_sect]
+pkcs11-module-quirks = no-deinit

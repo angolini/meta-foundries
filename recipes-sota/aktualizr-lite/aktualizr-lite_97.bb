@@ -16,6 +16,7 @@ SRC_URI = "\
     gitsm://github.com/foundriesio/aktualizr-lite;protocol=https;branch=${BRANCH};name=aktualizr-lite \
     file://aktualizr-lite.service.in \
     file://tmpfiles.conf \
+    ${@bb.utils.contains('PACKAGECONFIG', 'hsm', 'file://pkcs11-provider.cnf', '', d)} \
 "
 
 inherit cmake pkgconfig systemd
@@ -27,7 +28,7 @@ PKCS11_ENGINE_PATH = "${libdir}/engines-3/pkcs11.so"
 PACKAGECONFIG ?= "libfyaml"
 PACKAGECONFIG[libfyaml] = ",,,libfyaml"
 PACKAGECONFIG[warning-as-error] = "-DWARNING_AS_ERROR=ON,-DWARNING_AS_ERROR=OFF,"
-PACKAGECONFIG[hsm] = "-DBUILD_P11=ON -DPKCS11_ENGINE_PATH=${PKCS11_ENGINE_PATH},-DBUILD_P11=OFF,libp11,"
+PACKAGECONFIG[hsm] = "-DBUILD_P11=ON -DPKCS11_ENGINE_PATH=${PKCS11_ENGINE_PATH},-DBUILD_P11=OFF,libp11,pkcs11-provider"
 PACKAGECONFIG[aklite-offline] = "-DBUILD_AKLITE_OFFLINE=ON,-DBUILD_AKLITE_OFFLINE=OFF,"
 PACKAGECONFIG[auto-downgrade] = "-DAUTO_DOWNGRADE=ON,-DAUTO_DOWNGRADE=OFF,"
 
@@ -59,6 +60,11 @@ do_install:append() {
     printf "[provision]\nprimary_ecu_hardware_id = \"${MACHINE}\"\n" \
 		> ${D}${libdir}/sota/conf.d/40-hardware-id.toml
 
+    if ${@bb.utils.contains('PACKAGECONFIG', 'hsm', 'true', 'false', d)}; then
+        install -d ${D}${sysconfdir}/ssl/openssl.cnf.d
+        install -m 0644 ${UNPACKDIR}/pkcs11-provider.cnf ${D}${sysconfdir}/ssl/openssl.cnf.d/
+    fi
+
     for tool in ${D}${bindir}/*; do
         case $(basename ${tool}) in
             aktualizr-lite|aklite-offline) ;;
@@ -78,6 +84,7 @@ FILES:${PN} = "\
     ${systemd_system_unitdir}/aktualizr-lite.service \
     ${nonarch_libdir}/tmpfiles.d/aktualizr-lite.conf \
     ${libdir}/sota/conf.d/40-hardware-id.toml \
+    ${sysconfdir}/ssl/openssl.cnf.d/pkcs11-provider.cnf \
 "
 FILES:${PN}-lib = "${nonarch_libdir}/libaktualizr_lite.so ${libdir}/libaktualizr.so"
 FILES:${PN}-offline = "${bindir}/aklite-offline"
