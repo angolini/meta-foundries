@@ -105,11 +105,14 @@ jobs:
             GITHUB_TOKEN may not push under .github/workflows.`,
             });
 
-      - name: Resolve every target against upstream master
+      # Only the qemu pins follow upstream. ci/uno-q.lock.yml stays where
+      # it is until someone moves it by hand, and so do the pins it takes
+      # from meta-qcom.
+      - name: Resolve the qemu targets against upstream master
         id: relock
         run: |
           # --update ignores the lockfiles, so every repo lands on its tip.
-          for target in qemuarm64-secureboot qemux86-64 uno-q; do
+          for target in qemuarm64-secureboot qemux86-64; do
             "$KAS_CONTAINER" lock --update ci/$target.yml
           done
           if git diff --quiet -- 'ci/*.lock.yml' 'ci/include/*.lock.yml'; then
@@ -151,7 +154,6 @@ jobs:
         target:
           - qemuarm64-secureboot
           - qemux86-64
-          - uno-q
     name: build ${{ matrix.target }}
     permissions:
       contents: read
@@ -283,10 +285,11 @@ jobs:
           git commit --file - <<EOF
           ci: update the kas lockfiles to upstream master
 
-          The weekly lock update resolved every kas target against the tip
-          of the branches the layers track. All three machine builds and
+          The weekly lock update resolved the qemu targets against the tip
+          of the branches the layers track. Both qemu builds and
           yocto-check-layer passed at these revisions, so they are safe to
-          adopt as the pins every pull request builds with.
+          adopt as the pins every pull request builds with. The uno-q pins
+          are not part of it.
 
           Produced by the kas lock update run ${GITHUB_RUN_ID}.
 
@@ -311,7 +314,7 @@ jobs:
               base: 'main',
               head: BRANCH,
               title: 'ci: update the kas lockfiles to upstream master',
-              body: `Weekly lock update. Every kas target was resolved against upstream master, then built: the three machines and \`yocto-check-layer\` all passed at these revisions.
+              body: `Weekly lock update. The qemu targets were resolved against upstream master, then built: \`qemuarm64-secureboot\`, \`qemux86-64\` and \`yocto-check-layer\` all passed at these revisions. The uno-q pins are left where they are.
 
             Produced by [run ${context.runId}](${RUN_URL}).`,
             });
