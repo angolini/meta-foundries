@@ -93,13 +93,14 @@ kas lockfiles:
 
 | lockfile | pins |
 | --- | --- |
-| `ci/include/base.lock.yml` | `bitbake`, `openembedded-core`, `meta-openembedded`, `meta-updater`, `meta-virtualization` |
-| `ci/qemuarm64-secureboot.lock.yml` | `meta-arm` |
-| `ci/uno-q.lock.yml` | the Qualcomm layers and `meta-qcom-arduino` |
+| `ci/include/nodistro.lock.yml` | `bitbake`, `openembedded-core`, `meta-openembedded`, `meta-updater`, `meta-virtualization`, `meta-arm` |
+| `ci/uno-q.lock.yml` | `meta-qcom`, `meta-qcom-distro` and `meta-qcom-arduino` |
 
 kas applies these on its own: it looks for `<file>.lock.yml` next to every
-config file it loads, includes among them, which is why the base lockfile also
-covers `yocto-check-layer` — that check composes `ci/include/base.yml`.
+config file it loads, includes among them, which is why the nodistro lockfile
+also covers `yocto-check-layer` — that check composes `ci/include/nodistro.yml`.
+The uno-q takes every other pin from `ci/base.lock.yml` in the `meta-qcom` it
+pins.
 `meta-foundries` itself carries no `url`, so kas never pins it and a build
 always uses the working tree: the pull request branch on CI, your checkout
 locally.
@@ -119,12 +120,16 @@ CI pins kas the same way, through `KAS_CONTAINER_IMAGE`, and takes the
 drift apart. A job annotation asks for the pin to move when a newer kas is
 released.
 
-Keeping the pins current is the `kas lock update` workflow's job: every
-Saturday it runs `kas lock --update`, which ignores the lockfiles and resolves
-each layer to the tip of its branch, builds the three machines and
+Only the qemu pins follow upstream. The `kas lock update` workflow runs every
+Saturday: `kas lock --update` ignores the lockfiles and resolves each layer to
+the tip of its branch, the workflow builds both qemu machines and
 `yocto-check-layer` at those revisions, and opens a pull request only when
 they all pass. A red run leaves the pins alone and files an issue, so upstream
 breakage never reaches a contributor's pull request.
+
+The uno-q pins stay out of it and move only by hand: `ci/uno-q.lock.yml`, and
+with it everything the uno-q takes from `meta-qcom`. The workflow neither
+relocks nor builds the uno-q.
 
 ## 4) Run routine checks via CI helper scripts
 
