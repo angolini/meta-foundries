@@ -167,13 +167,13 @@ jobs:
         run: rm -f ci/*.lock.yml ci/include/*.lock.yml
 
       - name: Download the candidate lockfiles
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: kas-locks-candidate
           path: ci
 
       - name: Download kas-container
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: kas-container-lock-update
           path: ${{ runner.temp }}
@@ -226,13 +226,13 @@ jobs:
         run: rm -f ci/*.lock.yml ci/include/*.lock.yml
 
       - name: Download the candidate lockfiles
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: kas-locks-candidate
           path: ci
 
       - name: Download kas-container
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: kas-container-lock-update
           path: ${{ runner.temp }}
@@ -268,7 +268,7 @@ jobs:
         run: rm -f ci/*.lock.yml ci/include/*.lock.yml
 
       - name: Download the candidate lockfiles
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: kas-locks-candidate
           path: ci
