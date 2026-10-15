@@ -48,6 +48,23 @@ meta-updater carries the `asn1c` compiler the update client build needs.
 meta-python, meta-filesystems and meta-networking are there because
 meta-updater and its own dependencies require them.
 
+This layer has an optional dependency on the meta-virtualization layer:
+
+```text
+URI: https://git.yoctoproject.org/meta-virtualization
+layers: meta-virtualization (collection "virtualization-layer")
+branch: master
+revision: HEAD
+```
+
+It is only required for container support: the Docker engine, Compose
+Apps, and the dockerd configuration and patches this layer applies. The
+recipes for it live under `dynamic-layers/virtualization-layer/` and are
+only parsed when meta-virtualization is in BBLAYERS. They also need
+`virtualization` in `DISTRO_FEATURES`, and the dockerd changes need
+`sota` there as well. An image with OS updates only does not need the
+layer.
+
 This layer has an optional dependency on the meta-arm layer:
 
 ```text
