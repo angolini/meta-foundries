@@ -42,6 +42,7 @@ CMD="$CMD $WORK_DIR/meta-openembedded/meta-python"
 CMD="$CMD $WORK_DIR/meta-openembedded/meta-filesystems"
 CMD="$CMD $WORK_DIR/meta-openembedded/meta-networking"
 CMD="$CMD $WORK_DIR/meta-updater"
+CMD="$CMD --additional-layers $WORK_DIR/meta-virtualization"
 # Disable automatic testing of dependencies
 CMD="$CMD --no-auto-dependency"
 # Set machines to all machines defined in this layer, if any. meta-foundries is
