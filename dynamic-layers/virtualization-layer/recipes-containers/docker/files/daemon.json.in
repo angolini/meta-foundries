@@ -1,0 +1,8 @@
+{
+  "features": {
+    "containerd-snapshotter": false
+  },
+  "storage-driver": "overlay2",
+  "max-concurrent-downloads": @@MAX_CONCURRENT_DOWNLOADS@@,
+  "max-download-attempts": @@MAX_DOWNLOAD_ATTEMPTS@@
+}
