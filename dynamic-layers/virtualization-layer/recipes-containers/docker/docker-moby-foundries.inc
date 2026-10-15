@@ -2,6 +2,7 @@ SRC_URI += " \
     file://dockerd-daemon-use-default-system-config-when-none-i.patch;patchdir=src/import \
     file://tarexport-Optimize-image-loading-on-local-host.patch;patchdir=src/import \
     file://registry-increase-TLS-and-connection-timeouts.patch;patchdir=src/import \
+    file://layer-Ensure-layer-files-are-synced-to-disk.patch;patchdir=src/import \
     file://daemon.json \
 "
 
