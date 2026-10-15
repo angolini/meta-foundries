@@ -1,0 +1,79 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Mike Sul <mike.sul@foundries.io>
+Date: Wed, 30 Jun 2021 15:06:05 +0300
+Subject: [PATCH] registry: increase TLS and connection timeouts
+
+Upstream-Status: Pending
+
+Signed-off-by: Mike Sul <mike.sul@foundries.io>
+Signed-off-by: Jose Quaresma <jose.quaresma@foundries.io>
+Signed-off-by: Daiane Angolini <daiane.angolini@oss.qualcomm.com>
+---
+ daemon/internal/distribution/registry.go | 4 ++--
+ daemon/pkg/registry/auth.go              | 4 ++--
+ daemon/pkg/registry/registry.go          | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/daemon/internal/distribution/registry.go b/daemon/internal/distribution/registry.go
+index 0c28028..ce01037 100644
+--- a/daemon/internal/distribution/registry.go
++++ b/daemon/internal/distribution/registry.go
+@@ -78,14 +78,14 @@ func newRepository(
+ 	repoName := reference.Path(ref)
+ 
+ 	direct := &net.Dialer{
+-		Timeout:   30 * time.Second,
++		Timeout:   60 * time.Second,
+ 		KeepAlive: 30 * time.Second,
+ 	}
+ 
+ 	base := &http.Transport{
+ 		Proxy:               http.ProxyFromEnvironment,
+ 		DialContext:         direct.DialContext,
+-		TLSHandshakeTimeout: 10 * time.Second,
++		TLSHandshakeTimeout: 60 * time.Second,
+ 		TLSClientConfig:     endpoint.TLSConfig,
+ 		IdleConnTimeout:     30 * time.Second,
+ 	}
+diff --git a/daemon/pkg/registry/auth.go b/daemon/pkg/registry/auth.go
+index 6296fc3..83e53f3 100644
+--- a/daemon/pkg/registry/auth.go
++++ b/daemon/pkg/registry/auth.go
+@@ -123,7 +123,7 @@ func v2AuthHTTPClient(endpoint *url.URL, authTransport http.RoundTripper, modifi
+ 
+ 	return &http.Client{
+ 		Transport: transport.NewTransport(authTransport, modifiers...),
+-		Timeout:   15 * time.Second,
++		Timeout:   60 * time.Second,
+ 	}, nil
+ }
+ 
+@@ -181,7 +181,7 @@ func (err PingResponseError) Error() string {
+ func PingV2Registry(endpoint *url.URL, authTransport http.RoundTripper) (challenge.Manager, error) {
+ 	pingClient := &http.Client{
+ 		Transport: authTransport,
+-		Timeout:   15 * time.Second,
++		Timeout:   60 * time.Second,
+ 	}
+ 	endpointStr := strings.TrimRight(endpoint.String(), "/") + "/v2/"
+ 	req, err := http.NewRequest(http.MethodGet, endpointStr, http.NoBody)
+diff --git a/daemon/pkg/registry/registry.go b/daemon/pkg/registry/registry.go
+index 5f9b823..0c306f9 100644
+--- a/daemon/pkg/registry/registry.go
++++ b/daemon/pkg/registry/registry.go
+@@ -136,10 +136,10 @@ func newTransport(tlsConfig *tls.Config) http.RoundTripper {
+ 		&http.Transport{
+ 			Proxy: http.ProxyFromEnvironment,
+ 			DialContext: (&net.Dialer{
+-				Timeout:   30 * time.Second,
++				Timeout:   60 * time.Second,
+ 				KeepAlive: 30 * time.Second,
+ 			}).DialContext,
+-			TLSHandshakeTimeout: 10 * time.Second,
++			TLSHandshakeTimeout: 60 * time.Second,
+ 			TLSClientConfig:     tlsConfig,
+ 			IdleConnTimeout:     30 * time.Second,
+ 		},
+-- 
+2.53.0
+
