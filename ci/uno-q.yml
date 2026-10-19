@@ -17,15 +17,5 @@ repos:
     branch: main
 
 local_conf_header:
-  dev-adbd: |
-    # adb reaches the console on boards with no bughopper attached.
-    IMAGE_CLASSES += "image-adbd"
-    EXTRA_IMAGE_FEATURES += "enable-adbd"
-    # linux-arduino builds the USB gadget support adbd needs as modules.
-    # Upstream-Status: Backport [meta-openembedded e37c3ee6]
-    # Remove once the meta-qcom pinned in ci/uno-q.lock.yml locks
-    # meta-openembedded at e37c3ee6 or later (meta-qcom 83dcb6cd).
-    IMAGE_INSTALL:append = " kernel-module-libcomposite kernel-module-usb-f-fs"
-
   rootfs-growth: |
     IMAGE_INSTALL:append = " resize-rootfs"
