@@ -10,7 +10,7 @@ DEPENDS = "asn1c-native boost curl libarchive libsodium openssl ostree sqlite3"
 
 PV = "97+git"
 BRANCH ?= "master"
-SRCREV = "e6ff51f7059f94f44e5a77b94796d1485588218d"
+SRCREV = "57e4f7f1959a5050fbd35c7a759f94e861c651a5"
 
 SRC_URI = "\
     gitsm://github.com/foundriesio/aktualizr-lite;protocol=https;branch=${BRANCH};name=aktualizr-lite \
