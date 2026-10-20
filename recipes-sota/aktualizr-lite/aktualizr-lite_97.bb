@@ -31,6 +31,7 @@ PACKAGECONFIG[warning-as-error] = "-DWARNING_AS_ERROR=ON,-DWARNING_AS_ERROR=OFF,
 PACKAGECONFIG[hsm] = "-DBUILD_P11=ON -DPKCS11_ENGINE_PATH=${PKCS11_ENGINE_PATH},-DBUILD_P11=OFF,libp11,pkcs11-provider"
 PACKAGECONFIG[aklite-offline] = "-DBUILD_AKLITE_OFFLINE=ON,-DBUILD_AKLITE_OFFLINE=OFF,"
 PACKAGECONFIG[auto-downgrade] = "-DAUTO_DOWNGRADE=ON,-DAUTO_DOWNGRADE=OFF,"
+PACKAGECONFIG[pin-os-name] = ",,"
 
 EXTRA_OECMAKE = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
                  -DBUILD_OSTREE=ON"
@@ -59,6 +60,10 @@ do_install:append() {
     install -m 0700 -d ${D}${libdir}/sota/conf.d
     printf "[provision]\nprimary_ecu_hardware_id = \"${MACHINE}\"\n" \
 		> ${D}${libdir}/sota/conf.d/40-hardware-id.toml
+    if ${@bb.utils.contains('PACKAGECONFIG', 'pin-os-name', 'true', 'false', d)}; then
+        printf "[pacman]\nos = \"${OSTREE_OSNAME}\"\n" \
+            > ${D}${libdir}/sota/conf.d/45-os.toml
+    fi
 
     if ${@bb.utils.contains('PACKAGECONFIG', 'hsm', 'true', 'false', d)}; then
         install -d ${D}${sysconfdir}/ssl/openssl.cnf.d
@@ -84,6 +89,7 @@ FILES:${PN} = "\
     ${systemd_system_unitdir}/aktualizr-lite.service \
     ${nonarch_libdir}/tmpfiles.d/aktualizr-lite.conf \
     ${libdir}/sota/conf.d/40-hardware-id.toml \
+    ${libdir}/sota/conf.d/45-os.toml \
     ${sysconfdir}/ssl/openssl.cnf.d/pkcs11-provider.cnf \
 "
 FILES:${PN}-lib = "${nonarch_libdir}/libaktualizr_lite.so ${libdir}/libaktualizr.so"
