@@ -59,6 +59,8 @@ do_install:append() {
     install -m 0700 -d ${D}${libdir}/sota/conf.d
     printf "[provision]\nprimary_ecu_hardware_id = \"${MACHINE}\"\n" \
 		> ${D}${libdir}/sota/conf.d/40-hardware-id.toml
+    printf "[pacman]\nos = \"${OSTREE_OSNAME}\"\n" \
+		> ${D}${libdir}/sota/conf.d/45-os.toml
 
     if ${@bb.utils.contains('PACKAGECONFIG', 'hsm', 'true', 'false', d)}; then
         install -d ${D}${sysconfdir}/ssl/openssl.cnf.d
@@ -84,6 +86,7 @@ FILES:${PN} = "\
     ${systemd_system_unitdir}/aktualizr-lite.service \
     ${nonarch_libdir}/tmpfiles.d/aktualizr-lite.conf \
     ${libdir}/sota/conf.d/40-hardware-id.toml \
+    ${libdir}/sota/conf.d/45-os.toml \
     ${sysconfdir}/ssl/openssl.cnf.d/pkcs11-provider.cnf \
 "
 FILES:${PN}-lib = "${nonarch_libdir}/libaktualizr_lite.so ${libdir}/libaktualizr.so"
