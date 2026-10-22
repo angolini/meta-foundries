@@ -10,7 +10,7 @@ repos:
   meta-arm:
     url: https://git.yoctoproject.org/meta-arm
     path: meta-arm
-    branch: master
+    branch: wrynose
     layers:
       meta-arm:
       meta-arm-bsp:

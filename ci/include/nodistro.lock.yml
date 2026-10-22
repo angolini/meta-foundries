@@ -1,16 +1,19 @@
+# wrynose 6.0.4: bitbake and openembedded-core at the yocto-6.0.4 tags,
+# the layers without a release tag at the tip of their wrynose branch on
+# 2026-10-22. kas lock --update drops this comment; restore it on a bump.
 header:
   version: 14
 overrides:
   repos:
     bitbake:
-      commit: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+      commit: 51fd94a67fa17650a9ff623492005972bbc7d26f
     openembedded-core:
-      commit: 3e06b44aa91157fd53142778a9a87e6c03821fcf
+      commit: 0f03c732a0a2d0506b41b1abe60b3f368b2300dc
     meta-openembedded:
-      commit: 66a02a247187fbb4605839771891d1f94807b3a4
+      commit: f28a144aa0a0ae05ca2ee91e1aef6aa05f6a12db
     meta-updater:
-      commit: 9f1d5c17b1a39081b6070e07c5514e3db051b5fd
+      commit: 58079ac04ea93cf358d83ff0e69bbdd48c52e8f8
     meta-virtualization:
-      commit: 798586ded03a24c1ba421e7d3804bec7326cd228
+      commit: 18d58082b2458cf85438ac6e0f2f1fd0153318cb
     meta-arm:
-      commit: 351ba71364a07c32c25867a061325ce8690ac487
+      commit: 673e8d7c5dcd14de58092eb73e6ecc5eee5c1735

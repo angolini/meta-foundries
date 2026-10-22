@@ -14,13 +14,8 @@ target: core-image-full-cmdline
 repos:
   meta-qcom-arduino:
     url: https://github.com/qualcomm-linux/meta-qcom-arduino
-    branch: main
+    branch: wrynose
 
 local_conf_header:
-  dev-adbd: |
-    # adb reaches the console on boards with no bughopper attached.
-    IMAGE_CLASSES += "image-adbd"
-    EXTRA_IMAGE_FEATURES += "enable-adbd"
-
   rootfs-growth: |
     IMAGE_INSTALL:append = " resize-rootfs"

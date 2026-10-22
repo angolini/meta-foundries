@@ -1,10 +1,12 @@
+# QLI 2.1.1: meta-qcom at the qli-2.1.1 tag, everything else from the
+# ci/base.lock.yml of that tag, except meta-qcom-arduino, which is not in
+# it and has no release tags: the tip of its wrynose branch on 2026-10-22.
+# kas lock --update drops this comment; restore it on a bump.
 header:
   version: 14
 overrides:
   repos:
     meta-qcom:
-      commit: 21c9c0d8138e3472b0ac04e780f18be14aa959ab
-    meta-qcom-distro:
-      commit: acc7f52e830e4308ea97020184cfb8171b0b1d87
+      commit: b094cfccc192d8e02809bf87c6dd9c76bcf31330
     meta-qcom-arduino:
-      commit: a65e94a51f8233607b683787735225a10d80fe65
+      commit: 8457c3dbb5dc650c7b0ac45c99ccb004a05f9d4f
