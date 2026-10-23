@@ -1,5 +1,3 @@
-FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
-
 SRC_URI += " \
     file://dockerd-daemon-use-default-system-config-when-none-i.patch;patchdir=src/import \
     file://tarexport-Optimize-image-loading-on-local-host.patch;patchdir=src/import \
