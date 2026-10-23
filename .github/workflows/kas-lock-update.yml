@@ -111,9 +111,19 @@ jobs:
       - name: Resolve the qemu targets against upstream master
         id: relock
         run: |
+          # The dumps before and after the relock give the changelog the
+          # old and the new pin of each repo, with its url. The targets
+          # share a lockfile, so every old dump comes before any relock.
+          mkdir -p "$RUNNER_TEMP/dump-old" "$RUNNER_TEMP/dump-new"
+          for target in qemuarm64-secureboot qemux86-64; do
+            "$KAS_CONTAINER" dump --format json ci/$target.yml > "$RUNNER_TEMP/dump-old/$target.json"
+          done
           # --update ignores the lockfiles, so every repo lands on its tip.
           for target in qemuarm64-secureboot qemux86-64; do
             "$KAS_CONTAINER" lock --update ci/$target.yml
+          done
+          for target in qemuarm64-secureboot qemux86-64; do
+            "$KAS_CONTAINER" dump --format json ci/$target.yml > "$RUNNER_TEMP/dump-new/$target.json"
           done
           if git diff --quiet -- 'ci/*.lock.yml' 'ci/include/*.lock.yml'; then
             echo "changed=false" >> $GITHUB_OUTPUT
@@ -127,6 +137,19 @@ jobs:
               echo '```'
             } >> $GITHUB_STEP_SUMMARY
           fi
+
+      - name: List the commits the new pins bring
+        if: steps.relock.outputs.changed == 'true'
+        run: |
+          python3 ci/scripts/lock-changelog.py "$RUNNER_TEMP/dump-old" "$RUNNER_TEMP/dump-new" > "$RUNNER_TEMP/lock-changelog.md"
+          cat "$RUNNER_TEMP/lock-changelog.md" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload the changelog
+        if: steps.relock.outputs.changed == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: kas-locks-changelog
+          path: ${{ runner.temp }}/lock-changelog.md
 
       - name: Upload the candidate lockfiles
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
@@ -273,6 +296,12 @@ jobs:
           name: kas-locks-candidate
           path: ci
 
+      - name: Download the changelog
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: kas-locks-changelog
+          path: ${{ runner.temp }}
+
       - name: Push the lock update branch
         id: push
         continue-on-error: true
@@ -308,7 +337,9 @@ jobs:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         with:
           script: |
+            const fs = require('fs');
             const { BRANCH, RUN_URL } = process.env;
+            const changelog = fs.readFileSync(`${process.env.RUNNER_TEMP}/lock-changelog.md`, 'utf8');
             const { data: pr } = await github.rest.pulls.create({
               ...context.repo,
               base: 'main',
@@ -316,7 +347,9 @@ jobs:
               title: 'ci: update the kas lockfiles to upstream master',
               body: `Weekly lock update. The qemu targets were resolved against upstream master, then built: \`qemuarm64-secureboot\`, \`qemux86-64\` and \`yocto-check-layer\` all passed at these revisions. The uno-q pins are left where they are.
 
-            Produced by [run ${context.runId}](${RUN_URL}).`,
+            Produced by [run ${context.runId}](${RUN_URL}).
+
+            ${changelog}`,
             });
             await github.rest.issues.addAssignees({
               ...context.repo, issue_number: pr.number, assignees: ['angolini'],
