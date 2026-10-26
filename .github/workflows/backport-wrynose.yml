@@ -1,0 +1,51 @@
+name: backport to wrynose
+
+on:
+  # pull_request_target gives the job a write token after the pull request
+  # is merged. The job only acts on merged pull requests and checks out the
+  # base repository, so no code from the pull request is ever run.
+  pull_request_target: # zizmor: ignore[dangerous-triggers]
+    types: [closed, labeled]
+  workflow_dispatch:
+    inputs:
+      pull_request:
+        description: Number of the merged pull request to backport
+        required: true
+
+permissions: {}
+
+jobs:
+  backport:
+    runs-on:
+      group: GHA-prd-foundriesio-SelfHosted-RG
+      labels: [ self-hosted, qcom-u2404, amd64 ]
+    name: backport to wrynose
+    # On merge with the label already set, or on the label set after the
+    # merge; a manual run names the pull request instead.
+    if: >
+      github.event_name == 'workflow_dispatch' || (
+        github.event.pull_request.merged &&
+        github.event.pull_request.base.ref == 'main' &&
+        contains(github.event.pull_request.labels.*.name, 'backport-wrynose') &&
+        (github.event.action == 'closed' || github.event.label.name == 'backport-wrynose')
+      )
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        # The action pushes the backport branch with these credentials.
+        # zizmor: ignore[artipacked]
+
+      # Cherry-picks with -x and opens the pull request against wrynose. A
+      # conflict, or a commit under .github/workflows that GITHUB_TOKEN may
+      # not push, leaves a comment on the merged pull request instead. CI on
+      # the new pull request waits for a maintainer to approve the run.
+      - name: Open the backport pull request
+        uses: korthout/backport-action@8560fb503c275d433c56f05a2f64850093baa9f7 # v4.7.0
+        with:
+          label_pattern: '^backport-(wrynose)$'
+          source_pr_number: ${{ inputs.pull_request }}
+          branch_name: backport/${target_branch}/pr-${pull_number}
+          pull_title: '[${target_branch}] ${pull_title}'
+          pull_description: 'Backport of #${pull_number} to `${target_branch}`, cherry-picked with `-x`.'
