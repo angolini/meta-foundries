@@ -4,7 +4,8 @@
 #
 # Mirror the CI Commit Message Check locally so violations surface before
 # pushing. Runs on the host; git is the only dependency. Rules and messages
-# track qualcomm/commit-msg-check-action (the QC Preflight commit-msg job).
+# track qualcomm/commit-msg-check-action (the QC Preflight commit-msg job),
+# check_commits.py at 79e81656d5a4.
 #
 # Usage: ci/scripts/commit-msg-check.sh [<range>]   # default: main..HEAD
 
@@ -20,12 +21,46 @@ strip() {
     printf '%s' "$s"
 }
 
-is_trailer() {
+# Trailers recognised anywhere in the message, not only in the trailing block.
+has_trailer_prefix() {
     case "$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')" in
         signed-off-by:*|co-authored-by:*|co-developed-by:*|\
-        reviewed-by:*|acked-by:*|tested-by:*) return 0 ;;
+        reviewed-by:*|acked-by:*|tested-by:*|assisted-by:*) return 0 ;;
     esac
     return 1
+}
+
+# A "Token: value" line, as git-interpret-trailers(1) defines a trailer.
+is_trailer() {
+    [[ "$1" =~ ^[A-Za-z][A-Za-z0-9-]*:([[:space:]]|$) ]] && return 0
+    has_trailer_prefix "$1"
+}
+
+# Index of the first line of the trailing trailer block, or n if there is
+# none. The block is contiguous and ends the message: a message that ends
+# in "(cherry picked from commit ...)" has no block, while a Signed-off-by
+# below that line opens one with no blank line above it.
+trailer_block_start() {
+    local end=$n start
+    while [ "$end" -gt 0 ] && [ -z "$(strip "${lines[end - 1]}")" ]; do
+        end=$((end - 1))
+    done
+    start=$end
+    while [ "$start" -gt 0 ]; do
+        local line="${lines[start - 1]}"
+        if is_trailer "$line" ||
+           { [ "$start" -lt "$end" ] && [ -n "$(strip "$line")" ] &&
+             [[ "${line:0:1}" =~ [[:space:]] ]]; }; then
+            start=$((start - 1))
+        else
+            break
+        fi
+    done
+    # A folded continuation line cannot open the block.
+    while [ "$start" -lt "$end" ] && ! is_trailer "${lines[start]}"; do
+        start=$((start + 1))
+    done
+    if [ "$start" -lt "$end" ]; then echo "$start"; else echo "$n"; fi
 }
 
 if ! commits="$(git rev-list --no-merges --reverse "$RANGE" 2>&1)"; then
@@ -53,10 +88,12 @@ for sha in $commits; do
         errors+=("Subject and body must be separated by a blank line")
     fi
 
+    # Trailers are not body text: they are exempt from the line length limit.
+    tstart=$(trailer_block_start)
     body=()
-    for (( i = 1; i < n; i++ )); do
+    for (( i = 2; i < tstart; i++ )); do
         s="$(strip "${lines[i]}")"
-        if [ -n "$s" ] && ! is_trailer "${lines[i]}"; then
+        if [ -n "$s" ] && ! has_trailer_prefix "${lines[i]}"; then
             body+=("$s")
         fi
     done
@@ -68,12 +105,8 @@ for sha in $commits; do
         done
     fi
 
-    first_trailer=-1
-    for (( i = 0; i < n; i++ )); do
-        if is_trailer "${lines[i]}"; then first_trailer=$i; break; fi
-    done
-    if [ "${#body[@]}" -gt 0 ] && [ "$first_trailer" -gt 0 ]; then
-        [ -n "$(strip "${lines[first_trailer - 1]}")" ] &&
+    if [ "${#body[@]}" -gt 0 ] && [ "$tstart" -gt 0 ] && [ "$tstart" -lt "$n" ]; then
+        [ -n "$(strip "${lines[tstart - 1]}")" ] &&
             errors+=("Body and trailers must be separated by a blank line")
     fi
 
