@@ -4,7 +4,7 @@
 # Do not modify it by hand, as the contents will be replaced when
 # running the update-modules task.
 
-LICENSE += "& Apache-2.0 & BSD-2-Clause & BSD-3-Clause & MIT"
+LICENSE += "AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND MIT"
 
 LIC_FILES_CHKSUM += "\
     file://pkg/mod/github.com/compose-spec/compose-go@v1.20.2/LICENSE;md5=9740d093a080530b5c5c6573df9af45a;spdx=Apache-2.0 \
