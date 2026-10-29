@@ -8,8 +8,8 @@ GO_IMPORT = "github.com/foundriesio/composeapp"
 GO_IMPORT_PROTO ?= "https"
 
 PV = "97+git"
-BRANCH ?= "lmp-97"
-SRCREV = "fb6b53354d4347d629a16d8e63055372cd5f550d"
+BRANCH ?= "main"
+SRCREV = "b47b2841ebd7547c5dc9ba87bd7601b256db8400"
 
 SRC_URI = "git://${GO_IMPORT};protocol=${GO_IMPORT_PROTO};branch=${BRANCH};destsuffix=${GO_SRCURI_DESTSUFFIX}"
 
@@ -27,7 +27,8 @@ COMPOSE_APP_COMPOSE_ROOT ?= "/var/sota/compose-apps"
 GO_EXTRA_LDFLAGS = "\
     -X '${GO_IMPORT}/cmd/composectl/cmd.storeRoot=${COMPOSE_APP_STORE_ROOT}' \
     -X '${GO_IMPORT}/cmd/composectl/cmd.composeRoot=${COMPOSE_APP_COMPOSE_ROOT}' \
-    -X '${GO_IMPORT}/cmd/composectl/cmd.commit=${SRCREV}' \
+    -X '${GO_IMPORT}/cmd/composectl/cmd.Version=v${PV}' \
+    -X '${GO_IMPORT}/cmd/composectl/cmd.Commit=${SRCREV}' \
 "
 
 do_install:append() {
