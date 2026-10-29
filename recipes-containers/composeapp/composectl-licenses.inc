@@ -10,18 +10,25 @@ LIC_FILES_CHKSUM += "\
     file://pkg/mod/github.com/compose-spec/compose-go@v1.20.2/LICENSE;md5=9740d093a080530b5c5c6573df9af45a;spdx=Apache-2.0 \
     file://pkg/mod/github.com/compose-spec/compose-go@v1.20.2/dotenv/LICENSE;md5=b5d436f39fbc753d5ce95d08b2f1c90b;spdx=MIT \
     file://pkg/mod/github.com/containerd/containerd@v1.7.15/LICENSE;md5=1269f40c0d099c21a871163984590d89;spdx=Apache-2.0 \
+    file://pkg/mod/github.com/containerd/continuity@v0.4.2/LICENSE;md5=1269f40c0d099c21a871163984590d89;spdx=Apache-2.0 \
+    file://pkg/mod/github.com/containerd/fifo@v1.1.0/LICENSE;md5=86d3f3a95c324c9479bd8986968f4327;spdx=Apache-2.0 \
     file://pkg/mod/github.com/containerd/log@v0.1.0/LICENSE;md5=1269f40c0d099c21a871163984590d89;spdx=Apache-2.0 \
+    file://pkg/mod/github.com/containerd/ttrpc@v1.2.3/LICENSE;md5=86d3f3a95c324c9479bd8986968f4327;spdx=Apache-2.0 \
+    file://pkg/mod/github.com/containerd/typeurl/v2@v2.1.1/LICENSE;md5=1269f40c0d099c21a871163984590d89;spdx=Apache-2.0 \
     file://pkg/mod/github.com/distribution/reference@v0.6.0/LICENSE;md5=d2794c0df5b907fdace235a619d80314;spdx=Apache-2.0 \
     file://pkg/mod/github.com/docker/cli@v25.0.3+incompatible/LICENSE;md5=9740d093a080530b5c5c6573df9af45a;spdx=Apache-2.0 \
     file://pkg/mod/github.com/docker/docker-credential-helpers@v0.7.0/LICENSE;md5=5f28a5a15a6bde800864f444aee95768;spdx=MIT \
     file://pkg/mod/github.com/docker/docker@v25.0.3+incompatible/LICENSE;md5=4859e97a9c7780e77972d989f0823f28;spdx=Apache-2.0 \
     file://pkg/mod/github.com/docker/go-connections@v0.4.0/LICENSE;md5=04424bc6f5a5be60691b9824d65c2ad8;spdx=Apache-2.0 \
+    file://pkg/mod/github.com/docker/go-events@v0.0.0-20190806004212-e31b211e4f1c/LICENSE;md5=bd1322eeca14e002eef16db6c9e56150;spdx=Apache-2.0 \
     file://pkg/mod/github.com/docker/go-units@v0.5.0/LICENSE;md5=04424bc6f5a5be60691b9824d65c2ad8;spdx=Apache-2.0 \
     file://pkg/mod/github.com/felixge/httpsnoop@v1.0.4/LICENSE.txt;md5=684da2bf3eed8fc8860e75ad84638225;spdx=MIT \
     file://pkg/mod/github.com/go-logr/logr@v1.3.0/LICENSE;md5=e3fc50a88d0a364313df4b21ef20c29e;spdx=Apache-2.0 \
     file://pkg/mod/github.com/go-logr/stdr@v1.2.2/LICENSE;md5=86d3f3a95c324c9479bd8986968f4327;spdx=Apache-2.0 \
     file://pkg/mod/github.com/gogo/protobuf@v1.3.2/LICENSE;md5=38be95f95200434dc208e2ee3dab5081;spdx=BSD-3-Clause \
     file://pkg/mod/github.com/golang/protobuf@v1.5.4/LICENSE;md5=939cce1ec101726fa754e698ac871622;spdx=BSD-3-Clause \
+    file://pkg/mod/github.com/google/go-cmp@v0.6.0/LICENSE;md5=4ac66f7dea41d8d116cb7fb28aeff2ab;spdx=BSD-3-Clause \
+    file://pkg/mod/github.com/google/uuid@v1.3.1/LICENSE;md5=88073b6dd8ec00fe09da59e0b6dfded1;spdx=BSD-3-Clause \
     file://pkg/mod/github.com/imdario/mergo@v0.3.16/LICENSE;md5=ff13e03bb57bf9c52645f2f942afa28b;spdx=BSD-3-Clause \
     file://pkg/mod/github.com/klauspost/compress@v1.17.4/LICENSE;md5=d0fd9ebda39468b51ff4539c9fbb13a8;spdx=BSD-3-Clause \
     file://pkg/mod/github.com/klauspost/compress@v1.17.4/internal/snapref/LICENSE;md5=b8b79c7d4cda128290b98c6a21f9aac6;spdx=BSD-3-Clause \
@@ -30,13 +37,17 @@ LIC_FILES_CHKSUM += "\
     file://pkg/mod/github.com/mitchellh/mapstructure@v1.5.0/LICENSE;md5=3f7765c3d4f58e1f84c4313cecf0f5bd;spdx=MIT \
     file://pkg/mod/github.com/moby/locker@v1.0.1/LICENSE;md5=d4653096bbe6c7090ef605fe464c94e7;spdx=Apache-2.0 \
     file://pkg/mod/github.com/moby/patternmatcher@v0.6.0/LICENSE;md5=4859e97a9c7780e77972d989f0823f28;spdx=Apache-2.0 \
+    file://pkg/mod/github.com/moby/sys/mountinfo@v0.6.2/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57;spdx=Apache-2.0 \
     file://pkg/mod/github.com/moby/sys/sequential@v0.5.0/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57;spdx=Apache-2.0 \
+    file://pkg/mod/github.com/moby/sys/signal@v0.7.0/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57;spdx=Apache-2.0 \
     file://pkg/mod/github.com/moby/sys/user@v0.1.0/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57;spdx=Apache-2.0 \
     file://pkg/mod/github.com/moby/term@v0.5.0/LICENSE;md5=4859e97a9c7780e77972d989f0823f28;spdx=Apache-2.0 \
     file://pkg/mod/github.com/morikuni/aec@v1.0.0/LICENSE;md5=86852eb2df591157c788f3ba889c8aec;spdx=MIT \
     file://pkg/mod/github.com/oklog/ulid/v2@v2.1.1/LICENSE;md5=86d3f3a95c324c9479bd8986968f4327;spdx=Apache-2.0 \
     file://pkg/mod/github.com/opencontainers/go-digest@v1.0.0/LICENSE;md5=2d6fc0e85c3f118af64c85a78d56d3cf;spdx=Apache-2.0 \
     file://pkg/mod/github.com/opencontainers/image-spec@v1.1.0/LICENSE;md5=27ef03aa2da6e424307f102e8b42621d;spdx=Apache-2.0 \
+    file://pkg/mod/github.com/opencontainers/runtime-spec@v1.1.0/LICENSE;md5=b355a61a394a504dacde901c958f662c;spdx=Apache-2.0 \
+    file://pkg/mod/github.com/opencontainers/selinux@v1.11.0/LICENSE;md5=e3fc50a88d0a364313df4b21ef20c29e;spdx=Apache-2.0 \
     file://pkg/mod/github.com/pkg/errors@v0.9.1/LICENSE;md5=6fe682a02df52c6653f33bd0f7126b5a;spdx=BSD-2-Clause \
     file://pkg/mod/github.com/sirupsen/logrus@v1.9.3/LICENSE;md5=8dadfef729c08ec4e631c4f6fc5d43a0;spdx=MIT \
     file://pkg/mod/github.com/spf13/cobra@v1.8.0/LICENSE.txt;md5=920d76114a32b0fb75b3f2718c5a91be;spdx=Apache-2.0 \
@@ -53,7 +64,9 @@ LIC_FILES_CHKSUM += "\
     file://pkg/mod/golang.org/x/net@v0.26.0/LICENSE;md5=5d4950ecb7b26d2c5e4e7b4e0dd74707;spdx=BSD-3-Clause \
     file://pkg/mod/golang.org/x/sync@v0.7.0/LICENSE;md5=5d4950ecb7b26d2c5e4e7b4e0dd74707;spdx=BSD-3-Clause \
     file://pkg/mod/golang.org/x/sys@v0.29.0/LICENSE;md5=7998cb338f82d15c0eff93b7004d272a;spdx=BSD-3-Clause \
+    file://pkg/mod/golang.org/x/text@v0.16.0/LICENSE;md5=5d4950ecb7b26d2c5e4e7b4e0dd74707;spdx=BSD-3-Clause \
     file://pkg/mod/google.golang.org/genproto/googleapis/rpc@v0.0.0-20230822172742-b8732ec3820d/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57;spdx=Apache-2.0 \
+    file://pkg/mod/google.golang.org/genproto@v0.0.0-20230822172742-b8732ec3820d/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57;spdx=Apache-2.0 \
     file://pkg/mod/google.golang.org/grpc@v1.59.0/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57;spdx=Apache-2.0 \
     file://pkg/mod/google.golang.org/protobuf@v1.33.0/LICENSE;md5=02d4002e9171d41a8fad93aa7faf3956;spdx=BSD-3-Clause \
     file://pkg/mod/gopkg.in/yaml.v3@v3.0.1/LICENSE;md5=3c91c17266710e16afdbb2b6d15c761c;spdx=Apache-2.0 \
