@@ -8,11 +8,10 @@ jobs:
       group: GHA-prd-foundriesio-SelfHosted-RG
       labels: [ self-hosted, qcom-u2404, amd64 ]
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: vale-cli/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # v3.0.0
         with:
-         files: docs/
+         version: 3.25.1 
          reporter: github-pr-check
          fail_on_error: false
          token: ${{secrets.GITHUB_TOKEN}}
-         vale_flags: "--config=docs/.vale.ini"
