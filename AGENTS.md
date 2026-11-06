@@ -178,8 +178,8 @@ ci/scripts/commit-msg-check.sh
 
 `ci/scripts/commit-msg-check.sh` runs on the host (git only) and mirrors the CI
 Commit Message Check rules: a non-empty subject and body, blank lines
-separating the subject, body, and trailers, and 72-character subject and
-body lines.
+separating the subject, body, and trailers, a 72-character subject, and
+120-character body lines.
 
 When the change touches `docs/`, also lint the prose with Vale (a PR check in
 CI). Both the `ci/` check scripts and the Vale workflow are described in
@@ -194,8 +194,8 @@ plain-English body that explains the problem before the imperative actions, and
 include the mandatory `Signed-off-by` (DCO) trailer (and, when an AI assistant
 helped produce the change, an `Assisted-by` trailer).
 
-Keep the subject and every body line to 72 characters or fewer, with a blank
-line between the subject and the body. CI's Commit Message Check enforces this
+Keep the subject to 72 characters or fewer and every body line to 120
+characters or fewer, with a blank line between the subject and the body. CI's Commit Message Check enforces this
 and fails the PR on any over-length line, so run `ci/scripts/commit-msg-check.sh`
 locally before pushing (see the pre-PR checks above).
 
