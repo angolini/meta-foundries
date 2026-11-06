@@ -25,8 +25,9 @@ Write a plain-English body that first explains the problem or reason for the
 change, then uses the imperative mood ("add", "drop", "enable") to describe the
 actions taken. Do not merely restate what the diff changes line by line.
 
-**Line length: keep the subject and every body line to 72 characters or
-fewer, and leave a blank line between the subject and the body.** CI enforces
+**Line length: keep the subject to 72 characters or fewer and every body
+line to 120 characters or fewer, and leave a blank line between the subject
+and the body.** CI enforces
 this in the Commit Message Check (part of QC Preflight Checks), which fails the
 whole PR on any over-length line. Check your commits locally before pushing
 with `ci/scripts/commit-msg-check.sh` (see the checklist below).

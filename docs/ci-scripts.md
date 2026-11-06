@@ -14,7 +14,8 @@ Run through these before opening a pull request:
       layer's patches against the Yocto Project patch guidelines.
 - [ ] `ci/scripts/commit-msg-check.sh` — checks each commit message against the CI
       Commit Message Check rules. A message needs a non-empty subject and
-      body, blank-line separators, and 72-character lines. Runs on the host,
+      body, blank-line separators, a 72-character subject, and 120-character
+      body lines. Runs on the host,
       not in `kas-container`.
 - [ ] `vale --config=docs/.vale.ini docs/` — lints the `docs/` prose with Vale
       (runs on the host, not in `kas-container`).
@@ -40,8 +41,8 @@ The helper passes the repo and work directories to the script for you.
 `ci/scripts/commit-msg-check.sh` mirrors the CI Commit Message Check locally. It runs on
 the host, needing only git and the working tree, not `kas-container`. It checks
 every non-merge commit against the same rules. A commit needs a non-empty
-subject and body, blank lines separating the subject, body, and trailers, and
-72-character subject and body lines.
+subject and body, blank lines separating the subject, body, and trailers, a
+72-character subject, and 120-character body lines.
 
 By default it checks the commits on the current branch that are not yet on
 `main`. Pass a revision range to override:

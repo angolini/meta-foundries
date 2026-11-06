@@ -5,13 +5,15 @@
 # Mirror the CI Commit Message Check locally so violations surface before
 # pushing. Runs on the host; git is the only dependency. Rules and messages
 # track qualcomm/commit-msg-check-action (the QC Preflight commit-msg job),
-# check_commits.py at 79e81656d5a4.
+# check_commits.py at 79e81656d5a4. The limits match the
+# commit-msg-check-extra-options in .github/workflows/qcom-preflight-checks.yml.
 #
 # Usage: ci/scripts/commit-msg-check.sh [<range>]   # default: main..HEAD
 
 set -u
 
-LIMIT=72
+SUBJECT_LIMIT=72
+BODY_LIMIT=120
 RANGE="${1:-main..HEAD}"
 
 strip() {
@@ -82,7 +84,7 @@ for sha in $commits; do
 
     subject="${lines[0]:-}"
     [ -z "$(strip "$subject")" ] && errors+=("Commit message is missing subject!")
-    [ "${#subject}" -gt "$LIMIT" ] && errors+=("Subject exceeds $LIMIT characters!")
+    [ "${#subject}" -gt "$SUBJECT_LIMIT" ] && errors+=("Subject exceeds $SUBJECT_LIMIT characters!")
 
     if [ "$n" -gt 1 ] && [ -n "$(strip "${lines[1]}")" ]; then
         errors+=("Subject and body must be separated by a blank line")
@@ -101,7 +103,7 @@ for sha in $commits; do
         errors+=("Commit message is missing a body!")
     else
         for l in "${body[@]}"; do
-            [ "${#l}" -gt "$LIMIT" ] && errors+=("Line exceeds $LIMIT characters: $l")
+            [ "${#l}" -gt "$BODY_LIMIT" ] && errors+=("Line exceeds $BODY_LIMIT characters: $l")
         done
     fi
 
