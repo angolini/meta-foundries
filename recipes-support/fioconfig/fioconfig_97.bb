@@ -11,7 +11,7 @@ GO_IMPORT_PROTO ?= "https"
 
 PV = "97+git"
 BRANCH ?= "main"
-SRCREV = "af05a010e63a404e6f5b81d1371d0a94ed6da87a"
+SRCREV = "2f641ccdc9202ae776137cfaa86de761f7f7af55"
 
 SRC_URI = "\
     git://${GO_IMPORT};protocol=${GO_IMPORT_PROTO};branch=${BRANCH};destsuffix=${GO_SRCURI_DESTSUFFIX} \
