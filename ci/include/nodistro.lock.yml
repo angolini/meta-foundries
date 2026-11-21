@@ -3,14 +3,14 @@ header:
 overrides:
   repos:
     bitbake:
-      commit: f22df7e0e00be1f3c406138b8b7269d47ea491fe
+      commit: 606786d17351534ce35d1b0f89815461546a66fe
     openembedded-core:
-      commit: f32bced7b431f39a956c3e0d42e3c756ab784c49
+      commit: 40bb14c8363234f7b4e92f104a552633fd7d9335
     meta-openembedded:
-      commit: 73caca3af70a1eef6c9af6a9acf51b0a41ae12d7
+      commit: 4da7ebc2a68897bb72dcdfcdf8bf16b98c74ef32
     meta-updater:
-      commit: 11cf72bab5cf1b82bca7f573f660603e77662688
+      commit: a80cc2f5ab7038aafabe0cb0f15af6ec830ad6bd
     meta-virtualization:
       commit: 89b00d096a432000766729cd721ae647af500112
     meta-arm:
-      commit: cb64770a72e20f7d3338ac5dff26bb245f6fb2c3
+      commit: 2d6e43e48d5c3c8fc3578440f793b17a646290ca
